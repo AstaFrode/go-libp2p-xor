@@ -3,7 +3,7 @@ package trie
 import (
 	"encoding/json"
 
-	"github.com/libp2p/go-libp2p-xor/key"
+	"github.com/AstaFrode/go-libp2p-xor/key"
 )
 
 // Trie is a trie for equal-length bit vectors, which stores values only in the leaves.
@@ -106,4 +106,15 @@ func (trie *Trie) shrink() {
 		trie.Key = b0.Key
 		trie.Branch[0], trie.Branch[1] = nil, nil
 	}
+}
+
+func (trie *Trie) Copy() *Trie {
+	if trie.IsLeaf() {
+		return &Trie{Key: trie.Key}
+	}
+
+	return &Trie{Branch: [2]*Trie{
+		trie.Branch[0].Copy(),
+		trie.Branch[1].Copy(),
+	}}
 }
